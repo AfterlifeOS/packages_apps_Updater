@@ -48,6 +48,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import android.graphics.Bitmap;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.provider.Settings;
+import android.database.ContentObserver;
+import android.net.Uri;
+
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
@@ -74,6 +81,7 @@ import id.afterlife.updater.misc.BuildInfoUtils;
 import id.afterlife.updater.misc.Constants;
 import id.afterlife.updater.misc.StringGenerator;
 import id.afterlife.updater.misc.Utils;
+import id.afterlife.updater.misc.UserInfoUtils;
 import id.afterlife.updater.model.Update;
 import id.afterlife.updater.model.UpdateInfo;
 
@@ -95,6 +103,10 @@ public class UpdatesActivity extends UpdatesListActivity implements UpdateImport
     private RotateAnimation mRefreshAnimation;
 
     private boolean mIsTV;
+	
+	private ImageView mUserAvatar;
+	private TextView mUserName;
+	private ContentObserver mUserInfoObserver;
 
     private UpdateInfo mToBeExported = null;
     private final ActivityResultLauncher<Intent> mExportUpdate = registerForActivityResult(
@@ -184,6 +196,11 @@ public class UpdatesActivity extends UpdatesListActivity implements UpdateImport
                 Utils.getDisplayVersion(BuildInfoUtils.getBuildVersion())));
 
         updateLastCheckedString();
+		
+		mUserAvatar = findViewById(R.id.user_avatar);
+		mUserName = findViewById(R.id.user_name);
+		loadUserInfo();
+		observeUserInfoChanges();
 
         TextView headerBuildVersion = findViewById(R.id.header_build_version);
         headerBuildVersion.setText(
@@ -657,4 +674,41 @@ public class UpdatesActivity extends UpdatesListActivity implements UpdateImport
                 })
                 .show();
     }
+
+private void loadUserInfo() {
+    String username = UserInfoUtils.getUserName(this);
+    Bitmap avatar = UserInfoUtils.getUserAvatar(this);
+
+    mUserName.setText(username);
+    if (avatar != null) {
+        mUserAvatar.setImageBitmap(avatar);
+    } else {
+        mUserAvatar.setImageResource(R.drawable.ic_default_avatar);
+    }
+}
+
+private void observeUserInfoChanges() {
+    if (mUserInfoObserver != null) return;
+
+    mUserInfoObserver = new android.database.ContentObserver(new android.os.Handler()) {
+        @Override
+        public void onChange(boolean selfChange, Uri uri) {
+            loadUserInfo();
+        }
+    };
+
+    getContentResolver().registerContentObserver(
+            Settings.Secure.getUriFor("afterlife_username"), false, mUserInfoObserver);
+    getContentResolver().registerContentObserver(
+            Settings.Secure.getUriFor("afterlife_user_avatar_uri"), false, mUserInfoObserver);
+}
+
+@Override
+protected void onDestroy() {
+    if (mUserInfoObserver != null) {
+        getContentResolver().unregisterContentObserver(mUserInfoObserver);
+        mUserInfoObserver = null;
+    }
+    super.onDestroy();
+}
 }

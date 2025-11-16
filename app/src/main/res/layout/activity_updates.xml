@@ -8,13 +8,12 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
+    <!-- ======= HEADER ======= -->
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true"
-        android:outlineAmbientShadowColor="@android:color/transparent"
-        android:outlineSpotShadowColor="@android:color/transparent"
         android:background="?android:attr/colorPrimary"
         android:theme="@style/Theme.CollapsingToolbar.Settings">
 
@@ -23,29 +22,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:clipToPadding="false"
-            app:forceApplySystemWindowInsetTop="true"
-            app:extraMultilineHeightEnabled="true"
-            app:contentScrim="@color/toolbar_collapsed"
-            app:maxLines="3"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
-            app:scrimAnimationDuration="50"
-            app:scrimVisibleHeightTrigger="@dimen/settingslib_scrim_visible_height_trigger"
-            app:statusBarScrim="@null"
             app:titleCollapseMode="fade"
-            app:collapsedTitleTextAppearance="@style/CollapsingToolbarTitle.Collapsed"
-            app:expandedTitleTextAppearance="@style/CollapsingToolbarTitle.Expanded"
-            app:expandedTitleMarginStart="@dimen/expanded_title_margin_start"
-            app:expandedTitleMarginEnd="@dimen/expanded_title_margin_end"
-            app:toolbarId="@id/action_bar">
+            app:toolbarId="@id/toolbar">
 
             <RelativeLayout
                 android:id="@+id/header_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="86dp"
-                android:paddingBottom="16dp"
-                android:paddingEnd="16dp"
-                android:paddingStart="16dp"
+                android:padding="16dp"
                 app:layout_collapseMode="parallax">
 
                 <TextView
@@ -53,19 +39,66 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-light"
-                    android:paddingBottom="16dp"
+                    android:paddingBottom="8dp"
                     android:textColor="?android:attr/textColorPrimary"
                     android:textSize="56sp"
-                    tools:text="AfterlifeOS\n20"/>
+                    tools:text="AfterLifeOS\n8.1"/>
+
+                <!-- 🔹 Avatar + Username -->
+                <LinearLayout
+                    android:id="@+id/user_info_container"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/header_title"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:background="@drawable/bg_user_info"
+                    android:padding="8dp"
+                    android:layout_marginTop="8dp">
+
+                    <ImageView
+                        android:id="@+id/user_avatar"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/ic_default_avatar"
+                        android:contentDescription="@string/user_avatar"
+                        android:scaleType="centerCrop"
+                        android:background="@drawable/bg_avatar_circle" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginStart="12dp">
+
+                        <TextView
+                            android:id="@+id/user_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Hi, KaeruShi"
+                            android:textStyle="bold"
+                            android:textColor="?android:attr/textColorPrimary"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/user_subtext"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="New update available!"
+                            android:textColor="?android:attr/textColorSecondary"
+                            android:textSize="13sp" />
+                    </LinearLayout>
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/header_build_version"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/header_title"
+                    android:layout_below="@id/user_info_container"
+                    android:layout_marginTop="8dp"
                     android:textColor="?android:attr/textColorPrimary"
                     android:textSize="12sp"
-                    tools:text="Android 13"/>
+                    tools:text="Android 16" />
 
                 <TextView
                     android:id="@+id/header_build_date"
@@ -74,7 +107,7 @@
                     android:layout_below="@id/header_build_version"
                     android:textColor="?android:attr/textColorPrimary"
                     android:textSize="12sp"
-                    tools:text="1970-01-01"/>
+                    tools:text="October 20, 2025" />
 
                 <TextView
                     android:id="@+id/header_last_check"
@@ -84,7 +117,7 @@
                     android:layout_marginTop="8dp"
                     android:textColor="?android:attr/textColorPrimary"
                     android:textSize="12sp"
-                    tools:text="Last checked: 1970-01-01"/>
+                    tools:text="Last checked: October 21, 2025" />
             </RelativeLayout>
 
             <androidx.appcompat.widget.Toolbar
@@ -97,6 +130,7 @@
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
+    <!-- ======= KONTEN ======= -->
     <androidx.core.widget.NestedScrollView
         android:id="@+id/no_new_updates_view"
         android:layout_width="match_parent"
