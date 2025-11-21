@@ -1,11 +1,13 @@
 *.iml
 .gradle
+.androidide
 /local.properties
 /.idea
 .DS_Store
 /build
 /captures
-/system_libs/*.jar
+/frameworks/*
+/system_libs/*
 /keystore.properties
 .externalNativeBuild
 .cxx
