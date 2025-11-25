@@ -1,0 +1,17 @@
+//
+// Copyright (C) 2025 AfterlifeOS Project
+//
+// SPDX-License-Identifier: Apache-2.0
+//
+
+java_import {
+    name: "lib_markwon-core",
+    jars: ["markwon-core.jar"],
+    sdk_version: "current",
+}
+
+java_import {
+    name: "lib_commonmark",
+    jars: ["commonmark.jar"],
+    sdk_version: "current",
+}

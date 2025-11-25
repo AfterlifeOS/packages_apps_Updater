@@ -7,7 +7,6 @@
 /build
 /captures
 /frameworks/*
-/system_libs/*
 /keystore.properties
 .externalNativeBuild
 .cxx
