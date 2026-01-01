@@ -81,16 +81,45 @@ public class Utils {
         return new File(context.getCacheDir(), "updates.json");
     }
 
+    private static String getCurrentVariant() {
+        return SystemProperties.get(Constants.PROP_RELEASE_VARIANT, "Vanilla").toLowerCase();
+    }
+
     // This should really return an UpdateBaseInfo object, but currently this only
     // used to initialize UpdateInfo objects
     private static UpdateInfo parseJsonUpdate(JSONObject object) throws JSONException {
         Update update = new Update();
-        update.setTimestamp(object.getLong("timestamp"));
-        update.setName(object.getString("filename"));
-        update.setDownloadId(object.getString("md5"));
-        update.setFileSize(object.getLong("size"));
-        update.setDownloadUrl(object.getString("download"));
-        update.setVersion(object.getString("version"));
+
+        // Unified info from root
+        String downloadUrl = object.optString("download", "");
+        String version = object.optString("version", "");
+
+        // Variant logic
+        JSONObject variants = object.optJSONObject("variants");
+        JSONObject targetVariant = null;
+
+        if (variants != null) {
+            String currentVariant = getCurrentVariant();
+            targetVariant = variants.optJSONObject(currentVariant);
+            if (targetVariant == null) {
+                Log.d(TAG, "No update found for current variant: " + currentVariant);
+                return null;
+            }
+            // Override version if present in variant
+            if (targetVariant.has("version")) {
+                version = targetVariant.getString("version");
+            }
+        } else {
+            // Legacy flat JSON support
+            targetVariant = object;
+        }
+
+        update.setTimestamp(targetVariant.getLong("timestamp"));
+        update.setName(targetVariant.getString("filename"));
+        update.setDownloadId(targetVariant.getString("md5"));
+        update.setFileSize(targetVariant.getLong("size"));
+        update.setDownloadUrl(downloadUrl);
+        update.setVersion(version);
         return update;
     }
 
@@ -127,6 +156,9 @@ public class Utils {
             }
             try {
                 UpdateInfo update = parseJsonUpdate(updatesList.getJSONObject(i));
+                if (update == null) {
+                    continue;
+                }
                 if (!compatibleOnly || isCompatible(update)) {
                     updates.add(update);
                 } else {

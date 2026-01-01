@@ -44,6 +44,7 @@ public final class Constants {
     public static final String PROP_DEVICE = "ro.afterlife.device";
     public static final String PROP_NEXT_DEVICE = "ro.updater.next_device";
     public static final String PROP_RELEASE_TYPE = "ro.afterlife.releasetype";
+    public static final String PROP_RELEASE_VARIANT = "ro.afterlife.releasevarient";
     public static final String PROP_BUILD_CODENAME = "ro.afterlife.version.codename";
     public static final String PROP_UPDATER_ALLOW_DOWNGRADING = "afterlife.updater.allow_downgrading";
 
